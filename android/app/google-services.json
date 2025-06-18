@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "781216548705",
+    "project_id": "futsal-ce7cc",
+    "storage_bucket": "futsal-ce7cc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781216548705:android:68969199e00dc27f73e720",
+        "android_client_info": {
+          "package_name": "com.example.futsalmate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0evd2JFuRgw9Naq0Mu_nwybrUbW-mM-s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
