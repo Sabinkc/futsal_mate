@@ -1,20 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:futsalmate/common/colors.dart';
 import 'package:futsalmate/common/authentication_textfield.dart';
+import 'package:futsalmate/common/utils.dart';
 import 'package:futsalmate/features/auth/data/firebase_authservice.dart';
+import 'package:futsalmate/features/auth/domain/auth_controller.dart';
 import 'package:futsalmate/features/auth/presentation/screens/signup_screen.dart';
 import 'package:futsalmate/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   LoginScreen({super.key});
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final FirebaseAuthservice firebaseAuth = FirebaseAuthservice();
+    final signProvider = ref.watch(authProvider);
+
     return KeyboardDismisser(
       child: Scaffold(
         body: Padding(
@@ -64,14 +68,17 @@ class LoginScreen extends StatelessWidget {
                       try {
                         if (emailController.text.isEmpty ||
                             passwordController.text.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("All fields are required")),
+                          Utils.showCommonSnackBar(
+                            context,
+                            content: "All field are required!",
                           );
                         } else {
-                          final user = await firebaseAuth.signIn(
-                            emailController.text,
-                            passwordController.text,
-                          );
+                          await ref
+                              .read(authProvider)
+                              .signIn(
+                                emailController.text.trim(),
+                                passwordController.text.trim(),
+                              );
                           // logger.log(user.toString());
                           // if (context.mounted) {
                           //   ScaffoldMessenger.of(context).showSnackBar(
@@ -90,19 +97,22 @@ class LoginScreen extends StatelessWidget {
                         }
                       } catch (e) {
                         if (context.mounted) {
-                          ScaffoldMessenger.of(
+                          Utils.showCommonSnackBar(
                             context,
-                          ).showSnackBar(SnackBar(content: Text(e.toString())));
+                            content: e.toString(),
+                          );
                         }
                       }
                     },
-                    child: Text(
-                      "SignIn",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: signProvider.isSignInLoading == true
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                            "SignIn",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.05),

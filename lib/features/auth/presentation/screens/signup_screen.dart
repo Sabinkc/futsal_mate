@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:futsalmate/common/authentication_textfield.dart';
 import 'package:futsalmate/common/colors.dart';
+import 'package:futsalmate/common/utils.dart';
 import 'package:futsalmate/features/auth/data/firebase_authservice.dart';
 import 'package:futsalmate/features/auth/presentation/screens/signin_screen.dart';
 import 'package:futsalmate/features/dashboard/presentation/screens/dashboard_screen.dart';
@@ -86,8 +87,9 @@ class SignupScreen extends StatelessWidget {
                       try {
                         if (emailController.text.isEmpty ||
                             passwordController.text.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("All fields are required")),
+                          Utils.showCommonSnackBar(
+                            context,
+                            content: "All fields are required!",
                           );
                         } else {
                           final user = await firebaseAuth.signUp(
@@ -113,9 +115,10 @@ class SignupScreen extends StatelessWidget {
                       } catch (e) {
                         logger.log(e.toString());
                         if (context.mounted) {
-                          ScaffoldMessenger.of(
+                          Utils.showCommonSnackBar(
                             context,
-                          ).showSnackBar(SnackBar(content: Text(e.toString())));
+                            content: e.toString(),
+                          );
                         }
                       }
                     },
