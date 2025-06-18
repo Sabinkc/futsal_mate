@@ -38,6 +38,8 @@ dependencies:
   keyboard_dismisser: ^3.0.0
   firebase_core: ^3.14.0
   firebase_auth: ^5.6.0
+  shared_preferences: ^2.5.3
+ 
 
 dev_dependencies:
   flutter_test:

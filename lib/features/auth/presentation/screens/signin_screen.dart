@@ -1,15 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:futsalmate/common/colors.dart';
+import 'package:futsalmate/features/auth/data/firebase_authservice.dart';
 import 'package:futsalmate/features/auth/presentation/screens/signup_screen.dart';
+import 'package:futsalmate/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-
+  LoginScreen({super.key});
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    final FirebaseAuthservice firebaseAuth = FirebaseAuthservice();
     return KeyboardDismisser(
       child: Scaffold(
         body: Padding(
@@ -29,12 +33,14 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 TextFormField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     hintText: "Email",
                     border: OutlineInputBorder(),
                   ),
                 ),
                 TextFormField(
+                  controller: passwordController,
                   decoration: InputDecoration(
                     hintText: "Password",
                     border: OutlineInputBorder(),
@@ -45,7 +51,42 @@ class LoginScreen extends StatelessWidget {
                   height: screenHeight * 0.06,
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      try {
+                        if (emailController.text.isEmpty ||
+                            passwordController.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("All fields are required")),
+                          );
+                        } else {
+                          final user = await firebaseAuth.signIn(
+                            emailController.text,
+                            passwordController.text,
+                          );
+                          // logger.log(user.toString());
+                          // if (context.mounted) {
+                          //   ScaffoldMessenger.of(context).showSnackBar(
+                          //     SnackBar(content: Text(user.toString())),
+                          //   );
+                          // }
+                          if (context.mounted) {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => DashboardScreen(),
+                              ),
+                              (route) => false,
+                            );
+                          }
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(e.toString())));
+                        }
+                      }
+                    },
                     child: Text("SignIn"),
                   ),
                 ),

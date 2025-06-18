@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:futsalmate/common/colors.dart';
 import 'package:futsalmate/features/auth/data/firebase_authservice.dart';
 import 'package:futsalmate/features/auth/presentation/screens/signin_screen.dart';
+import 'package:futsalmate/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'dart:developer' as logger;
 
@@ -72,10 +73,19 @@ class SignupScreen extends StatelessWidget {
                             emailController.text,
                             passwordController.text,
                           );
-                          logger.log(user.toString());
+                          // logger.log(user.toString());
+                          // if (context.mounted) {
+                          //   ScaffoldMessenger.of(context).showSnackBar(
+                          //     SnackBar(content: Text(user.toString())),
+                          //   );
+                          // }
                           if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(user.toString())),
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => DashboardScreen(),
+                              ),
+                              (route) => false,
                             );
                           }
                         }
