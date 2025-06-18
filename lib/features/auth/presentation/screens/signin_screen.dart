@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:futsalmate/common/colors.dart';
+import 'package:futsalmate/common/authentication_textfield.dart';
 import 'package:futsalmate/features/auth/data/firebase_authservice.dart';
 import 'package:futsalmate/features/auth/presentation/screens/signup_screen.dart';
 import 'package:futsalmate/features/dashboard/presentation/screens/dashboard_screen.dart';
@@ -24,33 +25,41 @@ class LoginScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: screenHeight * 0.2),
-                Align(
-                  alignment: Alignment.center,
-                  child: const Text(
-                    "Welcome to Futsal Mates",
-                    style: TextStyle(fontSize: 20),
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: screenHeight * 0.03,
+                    // bottom: screenHeight * 0.01,
+                  ),
+                  child: Image.asset(
+                    "assets/images/futsalmate_logo.webp",
+                    height: screenHeight * 0.2,
                   ),
                 ),
-                TextFormField(
+                Text(
+                  "SignIn",
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                ),
+                CommonAuthenticationTextField(
+                  prefixIcon: Icons.email_outlined,
+                  hintText: "Email",
                   controller: emailController,
-                  decoration: InputDecoration(
-                    hintText: "Email",
-                    border: OutlineInputBorder(),
-                  ),
                 ),
-                TextFormField(
+                CommonAuthenticationTextField(
+                  hintText: "Password",
                   controller: passwordController,
-                  decoration: InputDecoration(
-                    hintText: "Password",
-                    border: OutlineInputBorder(),
-                  ),
+                  prefixIcon: Icons.lock_outline,
                 ),
-                SizedBox(height: screenHeight * 0.03),
+                SizedBox(height: screenHeight * 0.01),
                 SizedBox(
                   height: screenHeight * 0.06,
                   width: double.infinity,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: CommonColors.primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
                     onPressed: () async {
                       try {
                         if (emailController.text.isEmpty ||
@@ -87,17 +96,27 @@ class LoginScreen extends StatelessWidget {
                         }
                       }
                     },
-                    child: Text("SignIn"),
+                    child: Text(
+                      "SignIn",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
-                SizedBox(height: screenHeight * 0.03),
+                SizedBox(height: screenHeight * 0.05),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   spacing: 5,
                   children: [
                     Text(
                       "Don't have an account?",
-                      style: TextStyle(color: CommonColors.greyColor),
+                      style: TextStyle(
+                        color: CommonColors.greyColor,
+                        fontSize: 20,
+                      ),
                     ),
                     InkWell(
                       onTap: () {
@@ -110,7 +129,11 @@ class LoginScreen extends StatelessWidget {
                       },
                       child: Text(
                         "SignUp",
-                        style: TextStyle(color: CommonColors.primaryColor),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: CommonColors.primaryColor,
+                        ),
                       ),
                     ),
                   ],
