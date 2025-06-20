@@ -4,7 +4,7 @@ import 'package:futsalmate/common/colors.dart';
 import 'package:futsalmate/features/auth/domain/bottomnavbar_controller.dart';
 import 'package:futsalmate/features/dashboard/presentation/screens/booking_screen.dart';
 import 'package:futsalmate/features/dashboard/presentation/screens/dashboard_screen.dart';
-import 'package:futsalmate/features/dashboard/presentation/screens/profile_screen.dart';
+import 'package:futsalmate/features/dashboard/presentation/screens/setting_screen.dart';
 
 class LandingScreen extends ConsumerStatefulWidget {
   const LandingScreen({super.key});
@@ -16,7 +16,7 @@ class LandingScreen extends ConsumerStatefulWidget {
 class _LandingScreenState extends ConsumerState<LandingScreen> {
   int selectedIndex = 0;
 
-  List<Widget> screens = [DashboardScreen(), BookingScreen(), ProfileScreen()];
+  List<Widget> screens = [DashboardScreen(), BookingScreen(), SettingScreen()];
   @override
   Widget build(BuildContext context) {
     final navProvider = ref.watch(navBarProvider);
@@ -35,16 +35,16 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
           },
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              label: "Home",
+              icon: Icon(Icons.dashboard_outlined),
+              label: "Dashboard",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.book_outlined),
               label: "Bookings",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_2_outlined),
-              label: "Profile",
+              icon: Icon(Icons.settings_outlined),
+              label: "Settings",
             ),
           ],
         ),

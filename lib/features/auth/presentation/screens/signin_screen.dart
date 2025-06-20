@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:futsalmate/common/colors.dart';
 import 'package:futsalmate/common/authentication_textfield.dart';
 import 'package:futsalmate/common/utils.dart';
+import 'package:futsalmate/features/auth/data/loggedinstate_sharedpref.dart';
 import 'package:futsalmate/features/auth/domain/auth_controller.dart';
 import 'package:futsalmate/features/auth/presentation/screens/signup_screen.dart';
 import 'package:futsalmate/features/dashboard/presentation/screens/dashboard_screen.dart';
@@ -80,6 +82,12 @@ class LoginScreen extends ConsumerWidget {
                                 emailController.text.trim(),
                                 passwordController.text.trim(),
                               );
+                          final User? user = FirebaseAuth.instance.currentUser;
+                          if (user == null) {
+                            return;
+                          }
+                          final sharedPref = LoggedinstateSharedpref();
+                          sharedPref.setUserUid(user.uid);
                           // logger.log(user.toString());
                           // if (context.mounted) {
                           //   ScaffoldMessenger.of(context).showSnackBar(
