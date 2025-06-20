@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:futsalmate/common/colors.dart';
 import 'package:futsalmate/common/authentication_textfield.dart';
 import 'package:futsalmate/common/utils.dart';
-import 'package:futsalmate/features/auth/data/firebase_authservice.dart';
 import 'package:futsalmate/features/auth/domain/auth_controller.dart';
 import 'package:futsalmate/features/auth/presentation/screens/signup_screen.dart';
 import 'package:futsalmate/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:futsalmate/features/dashboard/presentation/screens/landing_screen.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
 class LoginScreen extends ConsumerWidget {
@@ -66,10 +66,11 @@ class LoginScreen extends ConsumerWidget {
                     ),
                     onPressed: () async {
                       try {
-                        if (emailController.text.isEmpty ||
-                            passwordController.text.isEmpty) {
+                        if (emailController.text.trim().isEmpty ||
+                            passwordController.text.trim().isEmpty) {
                           Utils.showCommonSnackBar(
                             context,
+                            color: CommonColors.errorColor,
                             content: "All field are required!",
                           );
                         } else {
@@ -89,7 +90,7 @@ class LoginScreen extends ConsumerWidget {
                             Navigator.pushAndRemoveUntil(
                               context,
                               CupertinoPageRoute(
-                                builder: (context) => DashboardScreen(),
+                                builder: (context) => LandingScreen(),
                               ),
                               (route) => false,
                             );
@@ -99,6 +100,7 @@ class LoginScreen extends ConsumerWidget {
                         if (context.mounted) {
                           Utils.showCommonSnackBar(
                             context,
+                            color: CommonColors.errorColor,
                             content: e.toString(),
                           );
                         }

@@ -1,26 +1,33 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:futsalmate/common/authentication_textfield.dart';
 import 'package:futsalmate/common/colors.dart';
 import 'package:futsalmate/common/utils.dart';
 import 'package:futsalmate/features/auth/data/firebase_authservice.dart';
+import 'package:futsalmate/features/auth/domain/auth_controller.dart';
 import 'package:futsalmate/features/auth/presentation/screens/signin_screen.dart';
 import 'package:futsalmate/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:futsalmate/features/dashboard/presentation/screens/landing_screen.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'dart:developer' as logger;
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends ConsumerWidget {
   SignupScreen({super.key});
 
-  final TextEditingController userNameController = TextEditingController();
+  // final TextEditingController userNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
+  // final TextEditingController addressController = TextEditingController();
+  // final TextEditingController phoneController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final screenHeight = MediaQuery.of(context).size.height;
     final FirebaseAuthservice firebaseAuth = FirebaseAuthservice();
+    final signupProvider = ref.watch(authProvider);
     return KeyboardDismisser(
       child: Scaffold(
         body: Padding(
@@ -38,7 +45,7 @@ class SignupScreen extends StatelessWidget {
                   ),
                   child: Image.asset(
                     "assets/images/futsalmate_logo.webp",
-                    height: screenHeight * 0.1,
+                    height: screenHeight * 0.2,
                   ),
                 ),
                 // SizedBox(height: screenHeight * 0.1),
@@ -47,11 +54,11 @@ class SignupScreen extends StatelessWidget {
                   "SignUp",
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
-                CommonAuthenticationTextField(
-                  prefixIcon: Icons.person_outline,
-                  hintText: "User Name",
-                  controller: userNameController,
-                ),
+                // CommonAuthenticationTextField(
+                //   prefixIcon: Icons.person_outline,
+                //   hintText: "User Name",
+                //   controller: userNameController,
+                // ),
                 CommonAuthenticationTextField(
                   prefixIcon: Icons.email_outlined,
                   hintText: "Email",
@@ -63,15 +70,20 @@ class SignupScreen extends StatelessWidget {
                   prefixIcon: Icons.lock_outline,
                 ),
                 CommonAuthenticationTextField(
-                  prefixIcon: Icons.person_outline,
-                  hintText: "Address",
-                  controller: addressController,
+                  hintText: "Confirm Password",
+                  controller: confirmPasswordController,
+                  prefixIcon: Icons.lock_outline,
                 ),
-                CommonAuthenticationTextField(
-                  prefixIcon: Icons.person_outline,
-                  hintText: "Phone Number",
-                  controller: phoneController,
-                ),
+                // CommonAuthenticationTextField(
+                //   prefixIcon: Icons.person_outline,
+                //   hintText: "Address",
+                //   controller: addressController,
+                // ),
+                // CommonAuthenticationTextField(
+                //   prefixIcon: Icons.person_outline,
+                //   hintText: "Phone Number",
+                //   controller: phoneController,
+                // ),
                 SizedBox(height: screenHeight * 0.01),
                 SizedBox(
                   height: screenHeight * 0.06,
@@ -85,17 +97,28 @@ class SignupScreen extends StatelessWidget {
                     ),
                     onPressed: () async {
                       try {
-                        if (emailController.text.isEmpty ||
-                            passwordController.text.isEmpty) {
+                        if (emailController.text.trim().isEmpty ||
+                            passwordController.text.trim().isEmpty ||
+                            confirmPasswordController.text.trim().isEmpty) {
                           Utils.showCommonSnackBar(
                             context,
+                            color: CommonColors.errorColor,
                             content: "All fields are required!",
                           );
-                        } else {
-                          final user = await firebaseAuth.signUp(
-                            emailController.text,
-                            passwordController.text,
+                        } else if (passwordController.text.trim() !=
+                            confirmPasswordController.text.trim()) {
+                          Utils.showCommonSnackBar(
+                            context,
+                            color: CommonColors.errorColor,
+                            content: "Passwords donot match!",
                           );
+                        } else {
+                          await ref
+                              .read(authProvider)
+                              .signUp(
+                                emailController.text.trim(),
+                                passwordController.text.trim(),
+                              );
                           // logger.log(user.toString());
                           // if (context.mounted) {
                           //   ScaffoldMessenger.of(context).showSnackBar(
@@ -106,7 +129,7 @@ class SignupScreen extends StatelessWidget {
                             Navigator.pushAndRemoveUntil(
                               context,
                               CupertinoPageRoute(
-                                builder: (context) => DashboardScreen(),
+                                builder: (context) => LandingScreen(),
                               ),
                               (route) => false,
                             );
@@ -117,19 +140,22 @@ class SignupScreen extends StatelessWidget {
                         if (context.mounted) {
                           Utils.showCommonSnackBar(
                             context,
+                            color: CommonColors.errorColor,
                             content: e.toString(),
                           );
                         }
                       }
                     },
-                    child: Text(
-                      "Signup",
+                    child: signupProvider.isSignUpLoading == true
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                            "Signup",
 
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.01),

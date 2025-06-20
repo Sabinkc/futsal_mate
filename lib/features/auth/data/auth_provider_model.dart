@@ -16,4 +16,18 @@ class AuthProviderModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  bool isSignUpLoading = false;
+  Future signUp(String email, String password) async {
+    try {
+      isSignUpLoading = true;
+      notifyListeners();
+      await firebaseAuth.signUp(email, password);
+    } catch (e) {
+      rethrow;
+    } finally {
+      isSignUpLoading = false;
+      notifyListeners();
+    }
+  }
 }

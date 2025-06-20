@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:futsalmate/common/colors.dart';
 
 class Utils {
   static void showCommonSnackBar(
     BuildContext context, {
     String content = "null",
+    Color color = Colors.purple,
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: CommonColors.scaffoldBackgroundColor,
+        backgroundColor: color,
         duration: Duration(milliseconds: 500),
         content: Text(
           content,
