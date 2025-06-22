@@ -5,6 +5,7 @@ import 'package:futsalmate/common/utils.dart';
 import 'package:futsalmate/features/auth/data/firebase_authservice.dart';
 import 'package:futsalmate/features/auth/data/loggedinstate_sharedpref.dart';
 import 'package:futsalmate/features/auth/presentation/screens/signin_screen.dart';
+import 'package:futsalmate/features/dashboard/presentation/screens/profile_screen.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -86,6 +87,22 @@ class SettingScreen extends StatelessWidget {
                   trailing: Icon(Icons.arrow_forward_ios),
                   leading: Icon(Icons.logout_outlined),
                   title: Text("Log Out"),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(builder: (context) => ProfileScreen()),
+                );
+              },
+              child: Container(
+                color: CommonColors.lightGreyColor,
+                child: ListTile(
+                  trailing: Icon(Icons.arrow_forward_ios),
+                  leading: Icon(Icons.person_outline),
+                  title: Text("My Profile"),
                 ),
               ),
             ),

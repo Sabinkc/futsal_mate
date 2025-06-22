@@ -30,4 +30,10 @@ class AuthProviderModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  String signupAddress = "koteshwor";
+  void updateSignupAddress(String value) {
+    signupAddress = value;
+    notifyListeners();
+  }
 }
