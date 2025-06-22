@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:futsalmate/common/colors.dart';
 import 'package:futsalmate/common/common_textfiled.dart';
+import 'package:futsalmate/common/utils.dart';
+import 'package:futsalmate/features/auth/data/loggedinstate_sharedpref.dart';
 import 'package:futsalmate/features/dashboard/data/dropdown_list.dart';
 import 'package:futsalmate/features/dashboard/domain/profile_controller.dart';
+import 'dart:developer' as logger;
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -12,9 +16,25 @@ class ProfileScreen extends ConsumerStatefulWidget {
   ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-final TextEditingController userNameController = TextEditingController();
-
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  final TextEditingController userNameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+
+  final TextEditingController ageController = TextEditingController();
+
+  @override
+  void initState() {
+    Future.delayed(Duration.zero, () async {
+      final profileRef = ref.read(profileProvider);
+      profileRef.clearProfileProvider();
+      await profileRef.getProfile();
+      userNameController.text = profileRef.profile.userName;
+      phoneController.text = profileRef.profile.phone;
+      ageController.text = profileRef.profile.age;
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -42,10 +62,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
 
             CommonTextField(
-              controller: userNameController,
+              controller: phoneController,
               labelName: "Phone Number",
             ),
-            CommonTextField(controller: userNameController, labelName: "Age"),
+            CommonTextField(controller: ageController, labelName: "Age"),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
               width: double.infinity,
@@ -145,11 +165,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ),
                       DropdownMenuItem(
                         value: "midfielder",
-                        child: Text(DropdownList.futsalPositions[2]),
+                        child: Text(DropdownList.futsalPositions[3]),
                       ),
                       DropdownMenuItem(
                         value: "pivot",
-                        child: Text(DropdownList.futsalPositions[3]),
+                        child: Text(DropdownList.futsalPositions[4]),
                       ),
                     ],
                     onChanged: (value) {
@@ -219,11 +239,39 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: () {},
-                child: Text(
-                  "Save changes",
-                  style: TextStyle(color: Colors.white),
-                ),
+                onPressed: () async {
+                  try {
+                    await profileProviderRef.updateProfile(
+                      userNameController.text.trim(),
+                      phoneController.text.trim(),
+                      ageController.text.trim(),
+                      profileProviderRef.location,
+                      profileProviderRef.futsalPosition,
+                      profileProviderRef.skillLevel,
+                    );
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      Utils.showCommonSnackBar(
+                        context,
+                        content: "Profile updated successully!",
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      Utils.showCommonSnackBar(
+                        context,
+                        color: CommonColors.errorColor,
+                        content: e.toString(),
+                      );
+                    }
+                  }
+                },
+                child: profileProviderRef.isUpdateProfileLoading == true
+                    ? CircularProgressIndicator(color: Colors.white)
+                    : Text(
+                        "Save changes",
+                        style: TextStyle(color: Colors.white),
+                      ),
               ),
             ),
           ],

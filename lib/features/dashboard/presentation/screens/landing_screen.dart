@@ -14,9 +14,16 @@ class LandingScreen extends ConsumerStatefulWidget {
 }
 
 class _LandingScreenState extends ConsumerState<LandingScreen> {
-  int selectedIndex = 0;
-
   List<Widget> screens = [DashboardScreen(), BookingScreen(), SettingScreen()];
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      ref.read(navBarProvider).clearSelectedIndex();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final navProvider = ref.watch(navBarProvider);

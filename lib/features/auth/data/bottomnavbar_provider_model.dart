@@ -6,4 +6,9 @@ class BottomnavbarProviderModel extends ChangeNotifier {
     selectedIndex = index;
     notifyListeners();
   }
+
+  void clearSelectedIndex() {
+    selectedIndex = 0;
+    notifyListeners();
+  }
 }

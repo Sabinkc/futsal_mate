@@ -9,7 +9,7 @@ class Utils {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: color,
-        duration: Duration(milliseconds: 500),
+        duration: Duration(milliseconds: 1000),
         content: Text(
           content,
           textAlign: TextAlign.start,
