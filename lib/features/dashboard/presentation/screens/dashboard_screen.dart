@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:futsalmate/common/colors.dart';
+import 'package:futsalmate/features/dashboard/presentation/widgets/post_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -9,7 +10,7 @@ class DashboardScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dashboard", style: TextStyle(color: Colors.white)),
+        title: Text("Feed", style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: CommonColors.primaryColor,
       ),
@@ -18,17 +19,31 @@ class DashboardScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: double.infinity,
-              height: screenHeight * 0.05,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: CommonColors.primaryColor),
-              ),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(Icons.add_outlined), Text("Add Post")],
+            InkWell(
+              onTap: () {
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) {
+                    return PostScreen();
+                  },
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                height: screenHeight * 0.05,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: CommonColors.primaryColor),
+                ),
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.add_outlined),
+                      Text("Post Requirements"),
+                    ],
+                  ),
                 ),
               ),
             ),

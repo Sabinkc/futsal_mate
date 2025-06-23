@@ -46,7 +46,7 @@ class _LandingScreenState extends ConsumerState<LandingScreen> {
           selectedItemColor: CommonColors.primaryColor,
           unselectedItemColor: Colors.black,
           unselectedLabelStyle: TextStyle(color: Colors.black),
-          unselectedFontSize: 9,
+
           onTap: (index) {
             ref.read(navBarProvider).updateSelectedIndex(index);
           },

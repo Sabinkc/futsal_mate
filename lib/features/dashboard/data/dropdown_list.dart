@@ -15,4 +15,6 @@ class DropdownList {
     "Jadibuti",
     "Lokanthali",
   ];
+
+  static List<String> type = ["Opponent", "Teammate"];
 }

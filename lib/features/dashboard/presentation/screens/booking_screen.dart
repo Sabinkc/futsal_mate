@@ -12,7 +12,11 @@ class BookingScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: CommonColors.primaryColor,
       ),
-      body: Center(child: Text("Booking Screen")),
+      body: Center(
+        child: Image.network(
+          'https://drive.google.com/uc?export=view&id=1gpR8826VzQchyND3QKZl7Q4KemEMYEAt',
+        ),
+      ),
     );
   }
 }
