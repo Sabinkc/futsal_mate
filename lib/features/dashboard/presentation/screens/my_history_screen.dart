@@ -12,7 +12,38 @@ class MyHistoryScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: CommonColors.primaryColor,
       ),
-      body: Center(child: Text("My History Screen")),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          spacing: 20,
+          children: [
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  "My post",
+                  style: TextStyle(color: CommonColors.primaryColor),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text("My bookings"),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

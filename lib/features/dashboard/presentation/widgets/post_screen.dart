@@ -1,12 +1,43 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:futsalmate/common/colors.dart';
+import 'package:futsalmate/common/utils.dart';
 import 'package:futsalmate/features/dashboard/data/dropdown_list.dart';
+import 'package:futsalmate/features/feed/domain/feed_controller.dart';
 
-class PostScreen extends StatelessWidget {
+class PostScreen extends ConsumerStatefulWidget {
   const PostScreen({super.key});
 
   @override
+  ConsumerState<PostScreen> createState() => _PostScreenState();
+}
+
+class _PostScreenState extends ConsumerState<PostScreen> {
+  final TextEditingController postedByController = TextEditingController();
+  final TextEditingController gameTimeController = TextEditingController();
+  final TextEditingController noOfPlayersController = TextEditingController();
+  final TextEditingController futslaNameController = TextEditingController();
+  final TextEditingController contactNoController = TextEditingController();
+
+  @override
+  void initState() {
+    Future.delayed(Duration.zero, () {
+      final postRefR = ref.read(postController);
+      postRefR.resetType();
+      postRefR.resetLocation();
+      postRefR.resetSillLevel();
+      postRefR.resetPosition();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final feedRef = ref.watch(feedController);
+    final feedRefR = ref.read(feedController);
+    final postRef = ref.watch(postController);
+    final postRefR = ref.read(postController);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Container(
@@ -15,7 +46,7 @@ class PostScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         color: Colors.white,
       ),
-      height: screenHeight * 0.7,
+      height: screenHeight * 0.8,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
@@ -47,6 +78,49 @@ class PostScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 10,
                   children: [
+                    Text("Posted By"),
+                    Container(
+                      width: screenWidth * 0.35,
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: CommonColors.greyColor),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: TextField(
+                        controller: postedByController,
+                        decoration: InputDecoration(border: InputBorder.none),
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  spacing: 10,
+                  children: [
+                    Text("Game Time"),
+                    Container(
+                      width: screenWidth * 0.35,
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: CommonColors.greyColor),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: TextField(
+                        controller: gameTimeController,
+                        decoration: InputDecoration(border: InputBorder.none),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 10,
+                  children: [
                     Text("Type"),
                     Container(
                       width: screenWidth * 0.35,
@@ -56,7 +130,7 @@ class PostScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: DropdownButton(
-                        value: "opponent",
+                        value: postRef.selectedType,
                         underline: SizedBox.shrink(),
                         items: [
                           DropdownMenuItem(
@@ -65,10 +139,12 @@ class PostScreen extends StatelessWidget {
                           ),
                           DropdownMenuItem(
                             value: "teammate",
-                            child: Text(DropdownList.type[0]),
+                            child: Text(DropdownList.type[1]),
                           ),
                         ],
-                        onChanged: (value) {},
+                        onChanged: (value) {
+                          postRefR.updateType(value!);
+                        },
                       ),
                     ),
                   ],
@@ -77,7 +153,7 @@ class PostScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   spacing: 10,
                   children: [
-                    Text("Position"),
+                    Text("No of players"),
                     Container(
                       width: screenWidth * 0.35,
                       padding: EdgeInsets.symmetric(horizontal: 5),
@@ -85,35 +161,9 @@ class PostScreen extends StatelessWidget {
                         border: Border.all(color: CommonColors.greyColor),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: DropdownButton(
-                          value: "midfielder",
-                          underline: SizedBox.shrink(),
-                          items: [
-                            DropdownMenuItem(
-                              value: "goalkeeper",
-                              child: Text(DropdownList.futsalPositions[0]),
-                            ),
-                            DropdownMenuItem(
-                              value: "defender",
-                              child: Text(DropdownList.futsalPositions[1]),
-                            ),
-                            DropdownMenuItem(
-                              value: "winger",
-                              child: Text(DropdownList.futsalPositions[2]),
-                            ),
-                            DropdownMenuItem(
-                              value: "midfielder",
-                              child: Text(DropdownList.futsalPositions[3]),
-                            ),
-                            DropdownMenuItem(
-                              value: "pivot",
-                              child: Text(DropdownList.futsalPositions[4]),
-                            ),
-                          ],
-                          onChanged: (value) {},
-                        ),
+                      child: TextField(
+                        controller: noOfPlayersController,
+                        decoration: InputDecoration(border: InputBorder.none),
                       ),
                     ),
                   ],
@@ -136,6 +186,7 @@ class PostScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: TextField(
+                        controller: futslaNameController,
                         decoration: InputDecoration(border: InputBorder.none),
                       ),
                     ),
@@ -159,7 +210,7 @@ class PostScreen extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: DropdownButton(
-                          value: "koteshwor",
+                          value: postRef.selectedLocation,
                           underline: SizedBox.shrink(),
                           items: [
                             DropdownMenuItem(
@@ -183,7 +234,9 @@ class PostScreen extends StatelessWidget {
                               child: Text(DropdownList.availiableAddresses[4]),
                             ),
                           ],
-                          onChanged: (value) {},
+                          onChanged: (value) {
+                            postRefR.updateLocation(value!);
+                          },
                         ),
                       ),
                     ),
@@ -207,6 +260,7 @@ class PostScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: TextField(
+                        controller: contactNoController,
                         decoration: InputDecoration(border: InputBorder.none),
                       ),
                     ),
@@ -227,7 +281,7 @@ class PostScreen extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: DropdownButton(
-                          value: "low",
+                          value: postRef.selectedSkillLevel,
                           underline: SizedBox.shrink(),
                           items: [
                             DropdownMenuItem(
@@ -243,7 +297,9 @@ class PostScreen extends StatelessWidget {
                               child: Text(DropdownList.skillLevel[2]),
                             ),
                           ],
-                          onChanged: (value) {},
+                          onChanged: (value) {
+                            postRefR.updateSkillLevel(value!);
+                          },
                         ),
                       ),
                     ),
@@ -251,6 +307,59 @@ class PostScreen extends StatelessWidget {
                 ),
               ],
             ),
+            if (postRef.selectedType == "teammate")
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 10,
+                    children: [
+                      Text("Position"),
+                      Container(
+                        width: screenWidth * 0.35,
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: CommonColors.greyColor),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: DropdownButton(
+                            value: postRef.selectedPosition,
+                            underline: SizedBox.shrink(),
+                            items: [
+                              DropdownMenuItem(
+                                value: "goalkeeper",
+                                child: Text(DropdownList.futsalPositions[0]),
+                              ),
+                              DropdownMenuItem(
+                                value: "defender",
+                                child: Text(DropdownList.futsalPositions[1]),
+                              ),
+                              DropdownMenuItem(
+                                value: "winger",
+                                child: Text(DropdownList.futsalPositions[2]),
+                              ),
+                              DropdownMenuItem(
+                                value: "midfielder",
+                                child: Text(DropdownList.futsalPositions[3]),
+                              ),
+                              DropdownMenuItem(
+                                value: "pivot",
+                                child: Text(DropdownList.futsalPositions[4]),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              postRefR.updatePosition(value!);
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             Spacer(),
             SizedBox(
               height: screenHeight * 0.05,
@@ -262,8 +371,42 @@ class PostScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: () {},
-                child: Text("Post", style: TextStyle(color: Colors.white)),
+                onPressed: () async {
+                  try {
+                    final user = FirebaseAuth.instance.currentUser;
+                    final uid = user!.uid;
+                    feedRefR.post(
+                      uid,
+                      postedByController.text.trim(),
+                      gameTimeController.text.trim(),
+                      postRefR.selectedType,
+                      noOfPlayersController.text.trim(),
+                      futslaNameController.text.trim(),
+                      postRefR.selectedLocation,
+                      contactNoController.text.trim(),
+                      postRefR.selectedSkillLevel,
+                      postRefR.selectedPosition,
+                    );
+
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      Utils.showCommonSnackBar(
+                        context,
+                        content: "Requirements posted successfully!",
+                        color: CommonColors.primaryColor,
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      Utils.showCommonSnackBar(context, content: "$e");
+                    }
+                  } finally {
+                    feedRefR.isPosting = false;
+                  }
+                },
+                child: feedRef.isPosting == true
+                    ? CircularProgressIndicator(color: Colors.white)
+                    : Text("Post", style: TextStyle(color: Colors.white)),
               ),
             ),
             SizedBox(height: 20),

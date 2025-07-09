@@ -8,7 +8,6 @@ import 'package:futsalmate/common/utils.dart';
 import 'package:futsalmate/features/auth/data/loggedinstate_sharedpref.dart';
 import 'package:futsalmate/features/auth/domain/auth_controller.dart';
 import 'package:futsalmate/features/auth/presentation/screens/signup_screen.dart';
-import 'package:futsalmate/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:futsalmate/features/dashboard/presentation/screens/landing_screen.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 

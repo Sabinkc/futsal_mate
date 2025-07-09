@@ -1,13 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:futsalmate/common/colors.dart';
 import 'package:futsalmate/common/common_textfiled.dart';
 import 'package:futsalmate/common/utils.dart';
-import 'package:futsalmate/features/auth/data/loggedinstate_sharedpref.dart';
 import 'package:futsalmate/features/dashboard/data/dropdown_list.dart';
 import 'package:futsalmate/features/dashboard/domain/profile_controller.dart';
-import 'dart:developer' as logger;
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});

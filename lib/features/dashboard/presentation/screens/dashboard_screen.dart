@@ -48,158 +48,166 @@ class DashboardScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            // Text("Recent Requirements", style: TextStyle(fontSize: 16)),
+
             Expanded(
-              child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Container(
-                      height: 200,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: CommonColors.greyColor),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          spacing: 10,
-                          children: [
-                            Row(
-                              spacing: 10,
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: CommonColors.lightGreyColor,
-                                  child: Icon(Icons.person_outline),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "John Doe",
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+              child: RefreshIndicator(
+                onRefresh: () async {},
+                child: ListView.builder(
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Container(
+                        height: 200,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: CommonColors.greyColor),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            spacing: 10,
+                            children: [
+                              Row(
+                                spacing: 10,
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor:
+                                        CommonColors.lightGreyColor,
+                                    child: Icon(Icons.person_outline),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              spacing: 5,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Type:",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                  Expanded(
+                                    child: Text(
+                                      "John Doe",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    Text("Teammate"),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Position:",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                spacing: 5,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Type:",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                    Text("Midfielder"),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              spacing: 5,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Futsal Name:",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
+                                      Text("Teammate"),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Position:",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                    Text("Elite Futsal"),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Location:",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
+                                      Text("Midfielder"),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                spacing: 5,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Futsal Name:",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                    Text("Shankhamul"),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              spacing: 5,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Contact:",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
+                                      Text("Elite Futsal"),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Location:",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                    Text("9812060688"),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "No of players:",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
+                                      Text("Shankhamul"),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                spacing: 5,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Contact:",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                    Text("2"),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              spacing: 5,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Time:",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
+                                      Text("9812060688"),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "No of players:",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                    Text("Today, 9:30 A.M."),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Skill Level:",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
+                                      Text("2"),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                spacing: 5,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Game Time:",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                    Text("Medium"),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
+                                      Text("Today, 9:30 A.M."),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Skill Level:",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Text("Medium"),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ],
