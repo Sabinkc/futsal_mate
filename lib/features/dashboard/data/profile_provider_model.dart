@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:futsalmate/features/auth/data/loggedinstate_sharedpref.dart';
 import 'dart:developer' as logger;
@@ -46,6 +47,7 @@ class ProfileProviderModel extends ChangeNotifier {
     try {
       final sharedPref = LoggedinstateSharedpref();
       final uid = await sharedPref.getUserUid();
+
       final userProfile = await FirebaseFirestore.instance
           .collection('userProfile')
           .doc(uid)

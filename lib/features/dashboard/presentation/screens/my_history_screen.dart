@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:futsalmate/common/colors.dart';
+import 'package:futsalmate/features/history/view/screens/my_posts_screen.dart';
 
 class MyHistoryScreen extends StatelessWidget {
   const MyHistoryScreen({super.key});
@@ -19,15 +21,23 @@ class MyHistoryScreen extends StatelessWidget {
           spacing: 20,
           children: [
             Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  "My post",
-                  style: TextStyle(color: CommonColors.primaryColor),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => MyPostsScreen()),
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    "My post",
+                    style: TextStyle(color: CommonColors.primaryColor),
+                  ),
                 ),
               ),
             ),

@@ -372,6 +372,18 @@ class _PostScreenState extends ConsumerState<PostScreen> {
                   ),
                 ),
                 onPressed: () async {
+                  if (postedByController.text.trim().isEmpty ||
+                      gameTimeController.text.trim().isEmpty ||
+                      noOfPlayersController.text.trim().isEmpty ||
+                      futslaNameController.text.trim().isEmpty ||
+                      contactNoController.text.trim().isEmpty) {
+                    Utils.showCommonSnackBar(
+                      context,
+                      color: CommonColors.errorColor,
+                      content: "All fields are required",
+                    );
+                    return;
+                  }
                   try {
                     final user = FirebaseAuth.instance.currentUser;
                     final uid = user!.uid;
