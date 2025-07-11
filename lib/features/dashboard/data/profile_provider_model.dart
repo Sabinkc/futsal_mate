@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:futsalmate/features/auth/data/loggedinstate_sharedpref.dart';
 import 'dart:developer' as logger;

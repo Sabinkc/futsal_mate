@@ -9,6 +9,7 @@ class PostItemModel {
   final String contactNo;
   final String skillLevel;
   final String position;
+  final String? docId;
 
   const PostItemModel({
     required this.uid,
@@ -21,6 +22,7 @@ class PostItemModel {
     required this.contactNo,
     required this.skillLevel,
     required this.position,
+    this.docId,
   });
 
   @override

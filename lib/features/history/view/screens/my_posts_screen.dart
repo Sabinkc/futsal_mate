@@ -79,6 +79,7 @@ class _DashboardScreenState extends ConsumerState<MyPostsScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Row(
+                                          spacing: 10,
                                           children: [
                                             CircleAvatar(
                                               backgroundColor:
@@ -93,7 +94,14 @@ class _DashboardScreenState extends ConsumerState<MyPostsScreen> {
                                             ),
                                           ],
                                         ),
-                                        Icon(Icons.delete_outline),
+                                        InkWell(
+                                          onTap: () async {
+                                            await feedRefR.deletePost(
+                                              feedRef.myPosts[index].docId!,
+                                            );
+                                          },
+                                          child: Icon(Icons.delete_outline),
+                                        ),
                                       ],
                                     ),
                                     Row(
