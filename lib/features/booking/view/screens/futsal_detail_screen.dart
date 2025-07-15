@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:futsalmate/common/colors.dart';
+import 'package:futsalmate/features/booking/model/available_time_converter.dart';
+import 'package:futsalmate/features/booking/model/futsal_detail_item_model.dart';
+import 'package:futsalmate/features/booking/view/widgets/booking_widget.dart';
 
 class FutsalDetailScreen extends StatelessWidget {
-  const FutsalDetailScreen({super.key});
+  final FutsalDetailItemModel futsalDetail;
+  const FutsalDetailScreen({super.key, required this.futsalDetail});
 
   @override
   Widget build(BuildContext context) {
-    final heigt = MediaQuery.sizeOf(context).height;
+    final height = MediaQuery.sizeOf(context).height;
     return Scaffold(
       appBar: AppBar(
         leading: InkWell(
@@ -22,9 +26,9 @@ class FutsalDetailScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            "assets/images/futsal.jpeg",
-            height: heigt * 0.3,
+          Image.network(
+            futsalDetail.imgeUrl,
+            height: height * 0.3,
             width: double.infinity,
             fit: BoxFit.cover,
           ),
@@ -34,12 +38,15 @@ class FutsalDetailScreen extends StatelessWidget {
               spacing: 10,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Elite Futsal"),
+                Text(futsalDetail.name),
                 Text("Location: Shankhamul"),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text("Fee: Rs.1000"), Text("Rating: 4.1")],
+                  children: [
+                    Text("Fee: Rs.${futsalDetail.fee}"),
+                    Text("Rating: 4.1"),
+                  ],
                 ),
                 SizedBox(height: 10),
                 Text("Availability:"),
@@ -49,8 +56,11 @@ class FutsalDetailScreen extends StatelessWidget {
                   height: 40,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 6,
+                    itemCount: futsalDetail.availability.length,
                     itemBuilder: (context, index) {
+                      bool isAvailable = futsalDetail.availability[index] == "1"
+                          ? true
+                          : false;
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child: Container(
@@ -61,42 +71,63 @@ class FutsalDetailScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey),
                             borderRadius: BorderRadius.circular(10),
+                            color: isAvailable ? Colors.grey : Colors.white,
                           ),
-                          child: Center(child: Text("7 A.M. - 8 A.M.")),
+                          child: Center(
+                            child: Text(
+                              AvailableTimeConverter.availableTime[index],
+                              style: TextStyle(
+                                color: isAvailable
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
+                          ),
                         ),
                       );
                     },
                   ),
                 ),
-                Text("Tomorrow"),
+                // Text("Tomorrow"),
 
-                SizedBox(
-                  height: 40,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 6,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(child: Text("7 A.M. - 8 A.M.")),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                // SizedBox(
+                //   height: 40,
+                //   child: ListView.builder(
+                //     scrollDirection: Axis.horizontal,
+                //     itemCount: 6,
+                //     itemBuilder: (context, index) {
+                //       return Padding(
+                //         padding: EdgeInsets.symmetric(horizontal: 10),
+                //         child: Container(
+                //           padding: EdgeInsets.symmetric(
+                //             horizontal: 10,
+                //             vertical: 4,
+                //           ),
+                //           decoration: BoxDecoration(
+                //             border: Border.all(color: Colors.grey),
+                //             borderRadius: BorderRadius.circular(10),
+                //           ),
+                //           child: Center(child: Text("7 A.M. - 8 A.M.")),
+                //         ),
+                //       );
+                //     },
+                //   ),
+                // ),
                 SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(onPressed: () {}, child: Text("Book")),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) {
+                          return BookingWidget(futsalDetail: futsalDetail);
+                        },
+                      );
+                    },
+                    child: Text("Book"),
+                  ),
                 ),
               ],
             ),
