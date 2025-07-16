@@ -26,6 +26,8 @@ class FutsalDetailModel extends ChangeNotifier {
           fee: data["fee"] as String,
           openingTime: data["openingTime"] as String,
           openingHours: data["openingHours"] as String,
+          latitude: data["latitude"] as String,
+          longitude: data["longitude"] as String,
           availability: (data["availability"] as List<dynamic>)
               .map((e) => e as String)
               .toList(),

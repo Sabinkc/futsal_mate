@@ -6,6 +6,8 @@ class FutsalDetailItemModel {
   final String openingHours;
   final List<String> availability;
   final String imgeUrl;
+  final String latitude;
+  final String longitude;
 
   FutsalDetailItemModel({
     required this.name,
@@ -15,6 +17,8 @@ class FutsalDetailItemModel {
     required this.openingHours,
     required this.availability,
     required this.imgeUrl,
+    required this.latitude,
+    required this.longitude,
   });
 
   @override
@@ -25,6 +29,8 @@ class FutsalDetailItemModel {
         'fee: $fee, '
         'openingTime: $openingTime, '
         'openingHours: $openingHours, '
+        'latitude: $latitude,'
+        'longitude: $longitude,'
         'availability: $availability'
         ')';
   }

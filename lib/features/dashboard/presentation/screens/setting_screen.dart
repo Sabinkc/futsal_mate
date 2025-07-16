@@ -7,6 +7,7 @@ import 'package:futsalmate/features/auth/data/firebase_authservice.dart';
 import 'package:futsalmate/features/auth/data/loggedinstate_sharedpref.dart';
 import 'package:futsalmate/features/auth/presentation/screens/signin_screen.dart';
 import 'package:futsalmate/features/dashboard/presentation/screens/profile_screen.dart';
+import 'package:futsalmate/test_screen.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -120,6 +121,22 @@ class SettingScreen extends StatelessWidget {
                   trailing: Icon(Icons.arrow_forward_ios),
                   leading: Icon(Icons.admin_panel_settings),
                   title: Text("Admin Test"),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(builder: (context) => TestScreen()),
+                );
+              },
+              child: Container(
+                color: CommonColors.lightGreyColor,
+                child: ListTile(
+                  trailing: Icon(Icons.arrow_forward_ios),
+                  leading: Icon(Icons.admin_panel_settings),
+                  title: Text("Test"),
                 ),
               ),
             ),

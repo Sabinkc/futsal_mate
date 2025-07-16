@@ -25,7 +25,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
   @override
   Widget build(BuildContext context) {
     final futsalRef = ref.watch(futsalDetailController);
-    final futsalRefR = ref.read(futsalDetailController);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Bookings", style: TextStyle(color: Colors.white)),
@@ -34,7 +34,10 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 10),
-            child: Text("Filter", style: TextStyle(color: Colors.white)),
+            child: InkWell(
+              onTap: () {},
+              child: Text("Filter", style: TextStyle(color: Colors.white)),
+            ),
           ),
         ],
       ),
