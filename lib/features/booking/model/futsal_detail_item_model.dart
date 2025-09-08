@@ -1,41 +1,3 @@
-// class FutsalDetailItemModel {
-//   final String name;
-//   final String location;
-//   final String fee;
-//   final String openingTime;
-//   final String openingHours;
-//   final List<String> availability;
-//   final String imgeUrl;
-//   final String latitude;
-//   final String longitude;
-
-//   FutsalDetailItemModel({
-//     required this.name,
-//     required this.location,
-//     required this.fee,
-//     required this.openingTime,
-//     required this.openingHours,
-//     required this.availability,
-//     required this.imgeUrl,
-//     required this.latitude,
-//     required this.longitude,
-//   });
-
-//   @override
-//   String toString() {
-//     return 'FutsalDetailItemModel('
-//         'name: $name, '
-//         'location: $location, '
-//         'fee: $fee, '
-//         'openingTime: $openingTime, '
-//         'openingHours: $openingHours, '
-//         'latitude: $latitude,'
-//         'longitude: $longitude,'
-//         'availability: $availability'
-//         ')';
-//   }
-// }
-
 class FutsalDetailItemModel {
   final String futsalId;
   final String name;
@@ -46,16 +8,16 @@ class FutsalDetailItemModel {
   final String description;
   final String ownerEmail;
   final String ownerPhone;
-  final int pricePerHour;
+  final num pricePerHour;
   final bool isVerified;
   final String status;
-  final double rating;
-  final int totalRatings;
-  final int totalBookings;
+  final num rating;
+  final num totalRatings;
+  final num totalBookings;
   final String startTime;
   final String endTime;
-  final String latitude;
-  final String longitude;
+  final num latitude;
+  final num longitude;
 
   FutsalDetailItemModel({
     required this.futsalId,
@@ -78,4 +40,30 @@ class FutsalDetailItemModel {
     required this.latitude,
     required this.longitude,
   });
+
+  @override
+  String toString() {
+    return '''
+FutsalDetailItemModel(
+  futsalId: $futsalId,
+  name: $name,
+  imageUrl: $imageUrl,
+  address: $address,
+  city: $city,
+  location: $location,
+  description: $description,
+  ownerEmail: $ownerEmail,
+  ownerPhone: $ownerPhone,
+  pricePerHour: $pricePerHour,
+  isVerified: $isVerified,
+  status: $status,
+  rating: $rating,
+  totalRatings: $totalRatings,
+  totalBookings: $totalBookings,
+  startTime: $startTime,
+  endTime: $endTime,
+  latitude: $latitude,
+  longitude: $longitude
+)''';
+  }
 }
