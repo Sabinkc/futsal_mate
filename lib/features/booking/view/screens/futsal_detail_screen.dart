@@ -1,81 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:futsalmate/common/colors.dart';
-// import 'package:futsalmate/features/booking/model/available_time_converter.dart';
-// import 'package:futsalmate/features/booking/model/futsal_detail_item_model.dart';
-// import 'package:futsalmate/features/booking/view/widgets/booking_widget.dart';
-
-// class FutsalDetailScreen extends StatelessWidget {
-//   final FutsalDetailItemModel futsalDetail;
-//   const FutsalDetailScreen({super.key, required this.futsalDetail});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final height = MediaQuery.sizeOf(context).height;
-//     return Scaffold(
-//       appBar: AppBar(
-//         leading: InkWell(
-//           onTap: () {
-//             Navigator.pop(context);
-//           },
-//           child: Icon(Icons.arrow_back, color: Colors.white),
-//         ),
-//         title: Text("Futsal Details", style: TextStyle(color: Colors.white)),
-//         centerTitle: true,
-//         backgroundColor: CommonColors.primaryColor,
-//       ),
-//       body: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Image.network(
-//             futsalDetail.imageUrl,
-//             height: height * 0.3,
-//             width: double.infinity,
-//             fit: BoxFit.cover,
-//           ),
-//           Padding(
-//             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-//             child: Column(
-//               spacing: 10,
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(futsalDetail.name),
-//                 Text("Location: Shankhamul"),
-
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     Text("Fee: Rs.${futsalDetail.pricePerHour}"),
-//                     Text("Rating: 4.1"),
-//                   ],
-//                 ),
-//                 SizedBox(height: 10),
-//                 Text("Availability:"),
-
-//                 SizedBox(height: 20),
-//                 // SizedBox(
-//                 //   width: double.infinity,
-//                 //   child: ElevatedButton(
-//                 //     onPressed: () {
-//                 //       showModalBottomSheet(
-//                 //         context: context,
-//                 //         isScrollControlled: true,
-//                 //         builder: (context) {
-//                 //           // return BookingWidget(futsalDetail: futsalDetail);
-//                 //         },
-//                 //       );
-//                 //     },
-//                 //     child: Text("Book"),
-//                 //   ),
-//                 // ),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:futsalmate/common/colors.dart';
 import 'package:futsalmate/features/booking/model/futsal_detail_item_model.dart';
@@ -250,16 +172,18 @@ class FutsalDetailScreen extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        // showModalBottomSheet(
-                        //   context: context,
-                        //   isScrollControlled: true,
-                        //   shape: const RoundedRectangleBorder(
-                        //     borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                        //   ),
-                        //   builder: (context) {
-                        //     return BookingWidget(futsalDetail: futsalDetail);
-                        //   },
-                        // );
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20),
+                            ),
+                          ),
+                          builder: (context) {
+                            return BookingWidget(futsalDetail: futsalDetail);
+                          },
+                        );
                       },
                       child: const Text(
                         "Book Now",
