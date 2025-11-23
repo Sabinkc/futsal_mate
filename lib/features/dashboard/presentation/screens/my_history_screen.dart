@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:futsalmate/common/colors.dart';
+import 'package:futsalmate/features/history/view/screens/my_bookings_screen.dart';
 import 'package:futsalmate/features/history/view/screens/my_posts_screen.dart';
 
 class MyHistoryScreen extends StatelessWidget {
@@ -34,21 +35,28 @@ class MyHistoryScreen extends StatelessWidget {
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Text(
-                    "My post",
-                    style: TextStyle(color: CommonColors.primaryColor),
-                  ),
+                  child: Text("My post", style: TextStyle()),
                 ),
               ),
             ),
             Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(20),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => MyBookingsScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text("My bookings"),
                 ),
-                child: Text("My bookings"),
               ),
             ),
           ],
