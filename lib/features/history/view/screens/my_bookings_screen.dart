@@ -17,6 +17,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
   List<Map<String, dynamic>> _bookings = [];
   List<Map<String, dynamic>> _filteredBookings = [];
   final TextEditingController _searchController = TextEditingController();
+  Map<String, String> _futsalNames = {}; // Cache for futsal names
 
   // Get current user UID from SharedPreferences
   Future<String> get _currentUserId async {
@@ -81,6 +82,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
 
       logger.log("✅ Loaded ${_bookings.length} bookings for user $userId");
 
+      // Load futsal names for all bookings
+      await _loadFutsalNames();
+
       if (mounted) {
         setState(() {
           _loading = false;
@@ -94,6 +98,43 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
         });
       }
     }
+  }
+
+  // Load futsal names for all unique futsal IDs in bookings
+  Future<void> _loadFutsalNames() async {
+    try {
+      // Get all unique futsal IDs from bookings
+      final Set<String?> futsalIds = _bookings
+          .map((booking) => booking['futsalId']?.toString())
+          .where((id) => id != null && id.isNotEmpty)
+          .toSet();
+
+      if (futsalIds.isEmpty) return;
+
+      logger.log("🔍 Loading futsal names for ${futsalIds.length} futsals");
+
+      // Fetch futsal details for all unique IDs
+      final snapshot = await FirebaseFirestore.instance
+          .collection('futsals')
+          .where(FieldPath.documentId, whereIn: futsalIds.toList())
+          .get();
+
+      // Create a map of futsalId -> futsalName
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        final futsalName = data['name']?.toString() ?? 'Unknown Futsal';
+        _futsalNames[doc.id] = futsalName;
+      }
+
+      logger.log("✅ Loaded ${_futsalNames.length} futsal names");
+    } catch (e, stackTrace) {
+      logger.log("❌ Error loading futsal names: $e", stackTrace: stackTrace);
+    }
+  }
+
+  // Get futsal name from cache or return fallback
+  String _getFutsalName(String futsalId) {
+    return _futsalNames[futsalId] ?? 'Loading...';
   }
 
   Future<void> _cancelBooking(
@@ -175,27 +216,24 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
       });
     } else {
       setState(() {
-        _filteredBookings = _bookings
-            .where(
-              (booking) =>
-                  booking['customerName']?.toString().toLowerCase().contains(
-                        query.toLowerCase(),
-                      ) ==
-                      true ||
-                  booking['futsalId']?.toString().toLowerCase().contains(
-                        query.toLowerCase(),
-                      ) ==
-                      true ||
-                  booking['timeSlot']?.toString().toLowerCase().contains(
-                        query.toLowerCase(),
-                      ) ==
-                      true ||
-                  booking['bookingDate']?.toString().toLowerCase().contains(
-                        query.toLowerCase(),
-                      ) ==
-                      true,
-            )
-            .toList();
+        _filteredBookings = _bookings.where((booking) {
+          final futsalId = booking['futsalId']?.toString() ?? '';
+          final futsalName = _getFutsalName(futsalId).toLowerCase();
+
+          return futsalName.contains(query.toLowerCase()) ||
+              booking['customerName']?.toString().toLowerCase().contains(
+                    query.toLowerCase(),
+                  ) ==
+                  true ||
+              booking['timeSlot']?.toString().toLowerCase().contains(
+                    query.toLowerCase(),
+                  ) ==
+                  true ||
+              booking['bookingDate']?.toString().toLowerCase().contains(
+                    query.toLowerCase(),
+                  ) ==
+                  true;
+        }).toList();
       });
     }
   }
@@ -275,6 +313,8 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
 
   Widget _buildBookingCard(Map<String, dynamic> booking) {
     final isCancellable = _isCancellable(booking);
+    final futsalId = booking['futsalId']?.toString() ?? 'N/A';
+    final futsalName = _getFutsalName(futsalId);
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -284,18 +324,30 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header row with Futsal ID and Status
+            // Header row with Futsal Name and Status
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: Text(
-                    'Futsal: ${booking['futsalId'] ?? 'N/A'}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    overflow: TextOverflow.ellipsis,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        futsalName,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                      if (futsalName == 'Loading...')
+                        const SizedBox(
+                          height: 16,
+                          width: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                    ],
                   ),
                 ),
                 Container(
@@ -488,7 +540,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                     child: TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                        hintText: "Search my bookings...",
+                        hintText: "Search by futsal name, date, time...",
                         prefixIcon: const Icon(
                           Icons.search,
                           color: Colors.grey,
