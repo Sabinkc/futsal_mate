@@ -215,20 +215,20 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         title: const Text("Bookings", style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: CommonColors.primaryColor,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: InkWell(
-              onTap: () {
-                // TODO: Implement filter
-              },
-              child: const Text(
-                "Filter",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
-        ],
+        // actions: [
+        //   Padding(
+        //     padding: const EdgeInsets.only(right: 10),
+        //     child: InkWell(
+        //       onTap: () {
+        //         // TODO: Implement filter
+        //       },
+        //       child: const Text(
+        //         "Filter",
+        //         style: TextStyle(color: Colors.white),
+        //       ),
+        //     ),
+        //   ),
+        // ],
       ),
       body: Column(
         children: [
@@ -247,7 +247,10 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                   hintText: "Search futsals by name...",
                   prefixIcon: const Icon(Icons.search, color: Colors.grey),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 16,
+                  ), // Add vertical padding
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
                           icon: const Icon(Icons.clear, color: Colors.grey),
