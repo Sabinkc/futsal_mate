@@ -520,6 +520,12 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(Icons.arrow_back, color: Colors.white),
+        ),
         title: const Text("My Bookings", style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: CommonColors.primaryColor,
