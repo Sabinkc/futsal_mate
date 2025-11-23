@@ -430,6 +430,13 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                                           color: Colors.black54,
                                         ),
                                       ),
+                                      Text(
+                                        "Distance: ${futsalRef.getDistanceForFutsal(futsal)}",
+                                        style: TextStyle(
+                                          color: Colors.blue[700],
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
