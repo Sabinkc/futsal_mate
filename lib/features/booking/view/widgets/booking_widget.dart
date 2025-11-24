@@ -38,6 +38,7 @@
 //   void initState() {
 //     super.initState();
 //     _loadBookedSlots();
+
 //   }
 
 //   Future<void> _loadBookedSlots() async {
@@ -102,10 +103,47 @@
 //         "${date.day.toString().padLeft(2, '0')}";
 //   }
 
+//   // Check if a time slot is in the future
+//   bool _isTimeSlotInFuture(String day, String timeSlot) {
+//     final now = DateTime.now();
+//     final currentTime = TimeOfDay.fromDateTime(now);
+
+//     if (day == "Today") {
+//       // Parse the time slot
+//       final timeParts = timeSlot.split(':');
+//       final slotHour = int.parse(timeParts[0]);
+//       final slotMinute = int.parse(timeParts[1]);
+//       final slotTime = TimeOfDay(hour: slotHour, minute: slotMinute);
+
+//       // Compare with current time
+//       return slotTime.hour > currentTime.hour ||
+//           (slotTime.hour == currentTime.hour &&
+//               slotTime.minute > currentTime.minute);
+//     } else if (day == "Tomorrow") {
+//       // All tomorrow slots are in the future
+//       return true;
+//     }
+
+//     return false;
+//   }
+
 //   Future<void> _confirmBooking(String slot, String day) async {
 //     String bookingDate = _formatDate(
 //       day == "Today" ? DateTime.now() : DateTime.now().add(Duration(days: 1)),
 //     );
+
+//     // Check if the time slot is in the future
+//     if (!_isTimeSlotInFuture(day, slot)) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         const SnackBar(
+//           content: Text(
+//             "Cannot book past time slots. Please select a future time.",
+//           ),
+//           backgroundColor: Colors.red,
+//         ),
+//       );
+//       return;
+//     }
 
 //     final confirm = await showDialog<bool>(
 //       context: context,
@@ -223,30 +261,42 @@
 //           runSpacing: 8,
 //           children: _timeSlots.map((slot) {
 //             final isBooked = booked.contains(slot);
+//             final isPastTime =
+//                 label == "Today" && !_isTimeSlotInFuture(label, slot);
+//             final isDisabled = isBooked || isPastTime;
+
+//             String disabledReason = '';
+//             if (isBooked) {
+//               disabledReason = 'Already booked';
+//             } else if (isPastTime) {
+//               disabledReason = 'Time has passed';
+//             }
+
 //             return ChoiceChip(
 //               label: Text(
 //                 slot,
 //                 style: TextStyle(
-//                   color: isBooked ? Colors.white : Colors.black,
+//                   color: isDisabled ? Colors.white : Colors.black,
 //                   fontWeight: FontWeight.w500,
 //                 ),
 //               ),
 //               selected: false,
-//               onSelected: isBooked
+//               onSelected: isDisabled
 //                   ? null
 //                   : (_) {
 //                       _confirmBooking(slot, label);
 //                     },
-//               backgroundColor: isBooked ? Colors.grey : Colors.green.shade100,
+//               backgroundColor: isDisabled ? Colors.grey : Colors.green.shade100,
 //               disabledColor: Colors.grey,
 //               shape: RoundedRectangleBorder(
 //                 borderRadius: BorderRadius.circular(8),
 //                 side: BorderSide(
-//                   color: isBooked
+//                   color: isDisabled
 //                       ? Colors.grey.shade600
 //                       : Colors.green.shade300,
 //                 ),
 //               ),
+//               tooltip: isDisabled ? disabledReason : 'Book $slot',
 //             );
 //           }).toList(),
 //         ),
@@ -257,19 +307,23 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:futsalmate/features/auth/data/loggedinstate_sharedpref.dart';
 import 'package:futsalmate/features/booking/model/futsal_detail_item_model.dart';
+import 'package:futsalmate/features/dashboard/data/profile_provider_model.dart';
 import 'dart:developer' as logger;
 
-class BookingWidget extends StatefulWidget {
+import 'package:futsalmate/features/dashboard/domain/profile_controller.dart';
+
+class BookingWidget extends ConsumerStatefulWidget {
   final FutsalDetailItemModel futsalDetail;
   const BookingWidget({super.key, required this.futsalDetail});
 
   @override
-  State<BookingWidget> createState() => _BookingWidgetState();
+  ConsumerState<BookingWidget> createState() => _BookingWidgetState();
 }
 
-class _BookingWidgetState extends State<BookingWidget> {
+class _BookingWidgetState extends ConsumerState<BookingWidget> {
   bool _loading = true;
   Set<String> _bookedToday = {};
   Set<String> _bookedTomorrow = {};
@@ -294,7 +348,12 @@ class _BookingWidgetState extends State<BookingWidget> {
   @override
   void initState() {
     super.initState();
-    _loadBookedSlots();
+    Future.delayed(Duration.zero, () async {
+      _loadBookedSlots();
+      final profileData = ref.read(profileProvider);
+      await profileData.getProfile();
+      _loadBookedSlots();
+    });
   }
 
   Future<void> _loadBookedSlots() async {
@@ -336,7 +395,6 @@ class _BookingWidgetState extends State<BookingWidget> {
       logger.log("✅ Booked Today Slots: $_bookedToday");
       logger.log("✅ Booked Tomorrow Slots: $_bookedTomorrow");
 
-      // Check if widget is still mounted before calling setState
       if (mounted) {
         setState(() {
           _loading = false;
@@ -344,7 +402,6 @@ class _BookingWidgetState extends State<BookingWidget> {
       }
     } catch (e, stackTrace) {
       logger.log("❌ Error scanning bookings: $e", stackTrace: stackTrace);
-      // Check if widget is still mounted before calling setState
       if (mounted) {
         setState(() {
           _loading = false;
@@ -359,24 +416,20 @@ class _BookingWidgetState extends State<BookingWidget> {
         "${date.day.toString().padLeft(2, '0')}";
   }
 
-  // Check if a time slot is in the future
   bool _isTimeSlotInFuture(String day, String timeSlot) {
     final now = DateTime.now();
     final currentTime = TimeOfDay.fromDateTime(now);
 
     if (day == "Today") {
-      // Parse the time slot
       final timeParts = timeSlot.split(':');
       final slotHour = int.parse(timeParts[0]);
       final slotMinute = int.parse(timeParts[1]);
       final slotTime = TimeOfDay(hour: slotHour, minute: slotMinute);
 
-      // Compare with current time
       return slotTime.hour > currentTime.hour ||
           (slotTime.hour == currentTime.hour &&
               slotTime.minute > currentTime.minute);
     } else if (day == "Tomorrow") {
-      // All tomorrow slots are in the future
       return true;
     }
 
@@ -388,7 +441,6 @@ class _BookingWidgetState extends State<BookingWidget> {
       day == "Today" ? DateTime.now() : DateTime.now().add(Duration(days: 1)),
     );
 
-    // Check if the time slot is in the future
     if (!_isTimeSlotInFuture(day, slot)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -429,25 +481,41 @@ class _BookingWidgetState extends State<BookingWidget> {
       final sharedPref = LoggedinstateSharedpref();
       final uid = await sharedPref.getUserUid();
 
+      // FIX: Use a different variable name to avoid conflict
+      final profileData = ref.read(profileProvider);
+      final profile = profileData.profile;
+
+      // Use profile data if available, otherwise fallback to guest data
+      final String customerName = profile.userName.isNotEmpty
+          ? profile.userName
+          : "Guest User";
+      final String customerPhone = profile.phone.isNotEmpty
+          ? profile.phone
+          : "N/A";
+      final String customerEmail =
+          "user@example.com"; // You might want to add email to your profile model
+
       await docRef.set({
         "futsalId": widget.futsalDetail.futsalId,
         "timeSlot": slot,
         "bookingDate": bookingDate,
         "createdAt": FieldValue.serverTimestamp(),
         "updatedAt": FieldValue.serverTimestamp(),
-        "customerName": "Guest User",
-        "customerEmail": "guest@example.com",
-        "customerPhone": "N/A",
+        "customerName": customerName,
+        "customerEmail": customerEmail,
+        "customerPhone": customerPhone,
         "amount": widget.futsalDetail.pricePerHour,
         "status": "pending",
         "paymentStatus": "pending",
         "notes": "Booked via app",
-        "userId": uid, // ADD THIS FIELD - crucial for My Bookings screen
+        "userId": uid,
       });
 
       logger.log("✅ Booking created for $slot on $bookingDate for user: $uid");
+      logger.log(
+        "📞 Customer details - Name: $customerName, Phone: $customerPhone",
+      );
 
-      // Close the bottom sheet first
       if (mounted) {
         Navigator.pop(context);
       }
@@ -455,11 +523,7 @@ class _BookingWidgetState extends State<BookingWidget> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Booked $slot on $day successfully")),
       );
-
-      // Don't call _loadBookedSlots() here since the widget is disposed
-      // The next time the widget opens, it will load fresh data
     } catch (e) {
-      // Only try to close if still mounted
       if (mounted) {
         Navigator.pop(context);
       }
